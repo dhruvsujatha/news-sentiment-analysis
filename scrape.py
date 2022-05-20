@@ -9,9 +9,6 @@ import re
 import pprint as pp
 
 finviz_url = "https://finviz.com/quote.ashx?t="
-
-tickers = ["AMZN", "AAPL", "AMD", "BABA", "CSCO", "FB", "GOOGL", "INTC", "MSFT", "NFLX", "NVDA", "PYPL", "TSLA", "TWTR", "V", "VZ", "WMT", "XOM"]
-
 news_headlines = {}
 
 
@@ -63,13 +60,14 @@ def group_by_date(data):
 def save_to_json(data, ticker):
     for date in data:
         package = {"ticker": ticker, "date": date, "headlines": data[date]}
-        if not os.path.isdir("data/" + ticker):
-            os.mkdir("data/" + ticker)
+        if not os.path.isdir("json/" + ticker):
+            os.mkdir("json/" + ticker)
         else:
-            with open("data/" + ticker + "/" + date + ".json", "w") as f:
+            with open("json/" + ticker + "/" + date + ".json", "w") as f:
                 json.dump(package, f, indent = 4)
 
-
+with open("tickers.txt") as f:
+    tickers = f.read().splitlines()
 for ticker in tickers:
     data = get_news_headlines(get_news_tables(ticker))
     data = fix_dates(data)
